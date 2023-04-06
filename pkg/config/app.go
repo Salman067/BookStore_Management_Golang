@@ -5,19 +5,24 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-var (
+type SetDB interface {
+	GetDB() *gorm.DB
+}
+type Database struct {
 	db *gorm.DB
-)
+}
 
-func Connect() {
-	d, err := gorm.Open("mysql", "salman:Salman12#@/project_golang?charset=utf8&parseTime=True&loc=Local")
+func (DB Database) GetDB() *gorm.DB {
+	return DB.db
+}
+
+func Connect() *gorm.DB {
+	d, err := gorm.Open("mysql", "root:Salman12#@/vivasoftlimited?charset=utf8&parseTime=True&loc=Local")
+	// d, err := gorm.Open("mysql", "root:Salman12#@/project_golang?charset=utf8&parseTime=True&loc=Local")
 
 	if err != nil {
 		panic(err)
 	}
-	db = d
-}
-
-func GetDB() *gorm.DB {
-	return db
+	var DB SetDB = Database{d}
+	return DB.GetDB()
 }
